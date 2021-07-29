@@ -10,18 +10,18 @@ services:
         expose:
           - 5002
         environment: 
-          API_DB_HOST: "db"
-          API_DB_PORT: "5432"
-          API_DB_USER: "postgres"
-          API_DB_PASSWORD: "IlJU7f71Vh7rM1yv"
-          PIS_HOST: "identity_service"
-          PIS_PORT: "5000"
-          RMQ_USER: "rabbitmq"
-          RMQ_PASSWORD: "IlJU7f71Vh7rM1yv"
-          RMQ_HOST: "rabbitmq"
-          RMQ_PORT: "5672"
-          ASPNETCORE_ENVIRONMENT: "Development"          
-          SeqURL: "http://seq:5341"
+          - API_DB_HOST=db
+          - API_DB_PORT=5432
+          - API_DB_USER=postgres
+          - API_DB_PASSWORD=IlJU7f71Vh7rM1yv
+          - PIS_HOST=identity_service
+          - PIS_PORT=5000
+          - RMQ_USER=rabbitmq
+          - RMQ_PASSWORD=IlJU7f71Vh7rM1yv
+          - RMQ_HOST=rabbitmq
+          - RMQ_PORT=5672
+          - ASPNETCORE_ENVIRONMENT=Development          
+          - SeqURL=http://seq:5341
         depends_on:    
           -  identity_service  
           -  rabbitmq  
@@ -37,12 +37,12 @@ services:
         expose:
           - 5000
         environment: 
-          PIS_DB_HOST: "db"
-          PIS_DB_PORT: "5432"
-          PIS_DB_USER: "postgres"
-          PIS_DB_PASSWORD: "IlJU7f71Vh7rM1yv"
-          ASPNETCORE_ENVIRONMENT: "Development"
-          Serilog__WriteTo__2__Args__serverUrl: "http://seq:5341"
+          - PIS_DB_HOST=db
+          - PIS_DB_PORT=5432
+          - PIS_DB_USER=postgres
+          - PIS_DB_PASSWORD=IlJU7f71Vh7rM1yv
+          - ASPNETCORE_ENVIRONMENT=Development
+          - Serilog__WriteTo__2__Args__serverUrl=http://seq:5341
         depends_on:
           -  db     
 
@@ -56,9 +56,9 @@ services:
         container_name: pg
         restart: unless-stopped
         environment:
-            PGDATA: "/var/lib/postgresql/data/pgdata"
-            POSTGRES_PASSWORD: "IlJU7f71Vh7rM1yv"
-            POSTGRES_USER: "postgres"
+          - PGDATA=/var/lib/postgresql/data/pgdata
+          - POSTGRES_PASSWORD=IlJU7f71Vh7rM1yv
+          - POSTGRES_USER=postgres
 
     
     rabbitmq:
@@ -68,8 +68,8 @@ services:
         container_name: rabbitmq
         restart: unless-stopped
         environment: 
-          RABBITMQ_DEFAULT_USER: "rabbitmq"
-          RABBITMQ_DEFAULT_PASS: "IlJU7f71Vh7rM1yv"
+          - RABBITMQ_DEFAULT_USER=rabbitmq
+          - RABBITMQ_DEFAULT_PASS=IlJU7f71Vh7rM1yv
         healthcheck:
           test: ["CMD", "curl", "-f", "http://localhost:15672"]
           interval: 30s
@@ -96,11 +96,11 @@ services:
         container_name: notification_worker
         restart: unless-stopped
         environment: 
-          RMQ_USER: "rabbitmq"
-          RMQ_PASSWORD: "IlJU7f71Vh7rM1yv"
-          RMQ_HOST: "rabbitmq"
-          RMQ_PORT: "5672"
-          DOTNET_ENVIRONMENT: "Development"
+          - RMQ_USER=rabbitmq
+          - RMQ_PASSWORD=IlJU7f71Vh7rM1yv
+          - RMQ_HOST=rabbitmq
+          - RMQ_PORT=5672
+          - DOTNET_ENVIRONMENT=Development
         depends_on:    
           -  rabbitmq  
           
@@ -114,7 +114,7 @@ services:
      ports:
       - 5340:80
      environment: 
-      ACCEPT_EULA: Y
+      - ACCEPT_EULA=Y
      volumes: 
       - seq_data:/data
 
@@ -132,7 +132,7 @@ services:
     grafana: 
       image: grafana/grafana      
       environment:
-        GF_SECURITY_ADMIN_PASSWORD: "IlJU7f71Vh7rM1yv"
+        - GF_SECURITY_ADMIN_PASSWORD=IlJU7f71Vh7rM1yv
       container_name: grafana
       restart: unless-stopped
       ports:
@@ -149,8 +149,8 @@ services:
       ports:
         - 8888:80
       environment: 
-        API_URI: "webapi_nginx:8989/api"
-        IS_URI:  "identity_nginx:8989"
+        - API_URI=webapi_nginx:8989/api
+        - IS_URI=identity_nginx:8989
       depends_on:        
         - identity_nginx
         - webapi_nginx   
